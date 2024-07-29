@@ -37,30 +37,42 @@ export default async function AdminDashBoard() {
     getSalesData(),
     getCustomersData(),
   ]);
+
+  const dashboardItems = [
+    {
+      title: "sales",
+      subtitle: formatNumber(salesData.numberOfSales),
+      body: formatCurrency(salesData.amount),
+    },
+    {
+      title: "Customers",
+      subtitle: `${formatCurrency(
+        customersData.avergeValuePerUser
+      )} spent on average`,
+      body: formatNumber(customersData.userCount),
+    },
+    {
+      title: "sales",
+      subtitle: formatNumber(salesData.numberOfSales),
+      body: formatCurrency(salesData.amount),
+    },
+
+    {
+      title: "sales",
+      subtitle: formatNumber(salesData.numberOfSales),
+      body: formatCurrency(salesData.amount),
+    },
+  ];
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <DashBoardCard
-        title="sales"
-        subtitle={formatNumber(salesData.numberOfSales)}
-        body={formatCurrency(salesData.amount)}
-      />
-      <DashBoardCard
-        title="Customers"
-        subtitle={`${formatCurrency(
-          customersData.avergeValuePerUser
-        )} spent on average`}
-        body={formatNumber(customersData.userCount)}
-      />
-      <DashBoardCard
-        title="Active Products"
-        subtitle={formatNumber(salesData.numberOfSales)}
-        body={formatCurrency(salesData.amount)}
-      />
-      <DashBoardCard
-        title="orders"
-        subtitle={formatNumber(salesData.numberOfSales)}
-        body={formatCurrency(salesData.amount)}
-      />
+      {dashboardItems.map((item, index) => (
+        <DashBoardCard
+          key={index}
+          title={item.title}
+          subtitle={item.subtitle}
+          body={item.body}
+        />
+      ))}
     </div>
   );
 }
