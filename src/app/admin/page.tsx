@@ -1,20 +1,24 @@
 import DashBoardCard from "@/components/dashboard/DashBoardCard";
+import LoadingIndicator from "@/components/ui/Loading";
 import prisma from "@/lib/db";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 async function getSalesData() {
   const salesData = await prisma.order.aggregate({
     _sum: { pricePaidIncents: true },
     _count: true,
   });
+  // await wait(3000);
   return {
     amount: (salesData._sum.pricePaidIncents || 0) / 100,
     numberOfSales: salesData._count,
   };
 }
-
+// function wait(duration: number) {
+//   return new Promise((resolve) => setTimeout(resolve, duration));
+// }
 async function getCustomersData() {
   const [userCount, orderData] = await Promise.all([
     prisma.user.count(),
@@ -25,17 +29,36 @@ async function getCustomersData() {
 
   return {
     userCount,
-    avergeValuePerUser:
+    averageValuePerUser:
       userCount === 0
         ? 0
         : (orderData._sum.pricePaidIncents || 0) / userCount / 100,
   }; //convert to rupees
 }
 
+async function getActiveProducts() {
+  const [activeProductsCount, inactiveProductsCount] = await Promise.all([
+    prisma.product.count({
+      where: {
+        isAvailableForPurchase: true,
+      },
+    }),
+    prisma.product.count({
+      where: { isAvailableForPurchase: false },
+    }),
+  ]);
+
+  return {
+    activeProductsCount,
+    inactiveProductsCount,
+  };
+}
+
 export default async function AdminDashBoard() {
-  const [salesData, customersData] = await Promise.all([
+  const [salesData, customersData, activeProductsData] = await Promise.all([
     getSalesData(),
     getCustomersData(),
+    getActiveProducts(),
   ]);
 
   const dashboardItems = [
@@ -47,16 +70,17 @@ export default async function AdminDashBoard() {
     {
       title: "Customers",
       subtitle: `${formatCurrency(
-        customersData.avergeValuePerUser
+        customersData.averageValuePerUser
       )} spent on average`,
       body: formatNumber(customersData.userCount),
     },
     {
-      title: "sales",
-      subtitle: formatNumber(salesData.numberOfSales),
-      body: formatCurrency(salesData.amount),
+      title: "Active Products",
+      subtitle: `${formatNumber(
+        activeProductsData.inactiveProductsCount
+      )} Inactive`,
+      body: formatNumber(activeProductsData.activeProductsCount),
     },
-
     {
       title: "sales",
       subtitle: formatNumber(salesData.numberOfSales),
@@ -65,14 +89,16 @@ export default async function AdminDashBoard() {
   ];
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {dashboardItems.map((item, index) => (
-        <DashBoardCard
-          key={index}
-          title={item.title}
-          subtitle={item.subtitle}
-          body={item.body}
-        />
-      ))}
+      <Suspense fallback={<LoadingIndicator />}>
+        {dashboardItems.map((item, index) => (
+          <DashBoardCard
+            key={index}
+            title={item.title}
+            subtitle={item.subtitle}
+            body={item.body}
+          />
+        ))}
+      </Suspense>
     </div>
   );
 }

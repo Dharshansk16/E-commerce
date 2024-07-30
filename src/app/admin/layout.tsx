@@ -1,6 +1,9 @@
 import { Navbar, NavLink } from "@/components/navbar/Navbar";
 import React from "react";
 
+export const dynamic = "force-dynamic"; //removes caching in admin page since we want most recent
+//data to be updated
+
 export default function AdminLayout({
   children,
 }: Readonly<{
