@@ -1,4 +1,4 @@
-import DashBoardCard from "@/components/dashboard/DashBoardCard";
+import DashBoardCard from "./admin_components/dashboard/DashBoardCard";
 import LoadingIndicator from "@/components/ui/Loading";
 import prisma from "@/lib/db";
 import { formatCurrency, formatNumber } from "@/lib/formatter";

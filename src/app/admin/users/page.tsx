@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function page() {
+export default function UsersPage() {
   return (
     <div>
       <h1>Users page</h1>
