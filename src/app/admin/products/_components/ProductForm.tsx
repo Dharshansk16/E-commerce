@@ -3,12 +3,15 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { formatCurrency } from "@/lib/formatter";
+import { Textarea } from "@/components/ui/textarea";
+import { addProduct } from "../../_actions/product";
+import { Button } from "@/components/ui/button";
 
 export default function ProductForm() {
-  const [pricePaidIncents, setPriceInRupees] = useState<number | undefined>(0);
+  const [pricePaidIncents, setPriceIncents] = useState<number | undefined>(0);
 
   return (
-    <form className="my-8">
+    <form action={addProduct} className="my-8">
       <div className="mb-4">
         <Label htmlFor="name">Product Name</Label>
         <Input type="text" id="name" name="name" required />
@@ -21,7 +24,7 @@ export default function ProductForm() {
           name="pricePaidIncents"
           value={pricePaidIncents}
           onChange={(e) => {
-            setPriceInRupees(Number(e.target.value) || undefined);
+            setPriceIncents(Number(e.target.value) || undefined);
           }}
           required
         />
@@ -31,8 +34,31 @@ export default function ProductForm() {
         </div>
       </div>
       <div className="mb-4">
-        <Label htmlFor="name">Product Name</Label>
-        <Input type="text" id="name" name="name" required />
+        <Label htmlFor="description">Description</Label>
+        <Textarea id="description" name="description" required />
+      </div>
+      <div className="mb-4">
+        <Label htmlFor="file">File</Label>
+        <Input
+          className="text-zinc-500"
+          type="file"
+          id="file"
+          name="file"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <Label htmlFor="image">Image</Label>
+        <Input
+          className="text-zinc-500"
+          type="file"
+          id="image"
+          name="image"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <Button type="submit">Save</Button>
       </div>
     </form>
   );

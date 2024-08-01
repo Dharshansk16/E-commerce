@@ -1,4 +1,4 @@
-import { Navbar, NavLink } from "@/components/navbar/Navbar";
+import { Navbar, NavLink } from "./admin_components/common/navbar/Navbar";
 import React from "react";
 
 export const dynamic = "force-dynamic"; //removes caching in admin page since we want most recent
