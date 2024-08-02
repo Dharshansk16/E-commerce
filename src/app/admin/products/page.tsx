@@ -1,5 +1,5 @@
 import React from "react";
-import PageHeader from "../admin_components/common/PageHeader";
+import PageHeader from "../_admin_components/common/PageHeader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProductsTable from "./_components/ProductsTable";

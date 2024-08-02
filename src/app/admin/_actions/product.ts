@@ -49,8 +49,5 @@ export async function addProduct(formData: FormData) {
     },
   });
 
-  revalidatePath("/");
-  revalidatePath("/products");
-
   redirect("/admin/products");
 }
